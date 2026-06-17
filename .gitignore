@@ -1,0 +1,38 @@
+# Checkpoints
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+
+# Datasets
+data/
+dataset/
+dataset_expand/
+GenImage/
+CIFAKE/
+Synthbuster/
+
+# Large outputs
+final_outputs/
+analysis_outputs/
+mask_cache/
+wandb/
+runs/
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+
+# System
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+
+# Colab
+drive/

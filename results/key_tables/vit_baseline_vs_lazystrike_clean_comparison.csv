@@ -1,0 +1,3 @@
+﻿model_name,fake_total,fake_TP_to_FN,fake_FN_to_TP,fake_TP_to_FN_ratio_percent,mean_prob_fake_drop_fake_images,interpretation
+ViT-B/16,6000,102,19,1.7000000000000002,0.016788,Baseline
+ViT-B/16 + LazyStrike-k1,6000,136,12,2.2666666666666666,0.01998,"Higher fake sensitivity, but larger JPEG-induced fake-to-real shift"

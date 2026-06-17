@@ -1,0 +1,7 @@
+﻿orig_ext,jpeg_ext,count,model_key,model_name,total_fake_TP_to_FN,ratio
+.jpg,.jpg,87,resnet18,ResNet18,144,0.6041666666666666
+.png,.jpg,57,resnet18,ResNet18,144,0.3958333333333333
+.jpg,.jpg,72,vit_b16,ViT-B/16,102,0.7058823529411765
+.png,.jpg,30,vit_b16,ViT-B/16,102,0.29411764705882354
+.jpg,.jpg,154,dinov3_vit_b16,DINOv3-ViT-B/16,247,0.6234817813765182
+.png,.jpg,93,dinov3_vit_b16,DINOv3-ViT-B/16,247,0.3765182186234818

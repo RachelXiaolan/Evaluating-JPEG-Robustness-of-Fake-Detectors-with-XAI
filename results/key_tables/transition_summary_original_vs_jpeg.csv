@@ -1,0 +1,4 @@
+﻿model_key,model_name,total_paired,fake_total,real_total,fake_TP_to_TP,fake_TP_to_FN,fake_FN_to_TP,fake_FN_to_FN,real_TN_to_TN,real_TN_to_FP,real_FP_to_TN,real_FP_to_FP,fake_TP_to_FN_ratio_in_fake,mean_prob_fake_drop_fake_images,mean_prob_fake_drop_real_images
+resnet18,ResNet18,12005,6000,6005,5463,144,4,389,5321,17,130,537,0.024,0.02811577958386988,0.01952596413659478
+vit_b16,ViT-B/16,12005,6000,6005,5525,102,19,354,5725,18,63,199,0.017,0.016788425233322354,0.006160016569273493
+dinov3_vit_b16,DINOv3-ViT-B/16,12005,6000,6005,5600,247,0,153,5853,1,66,85,0.041166666666666664,0.043684484882108035,0.011528592634730725
