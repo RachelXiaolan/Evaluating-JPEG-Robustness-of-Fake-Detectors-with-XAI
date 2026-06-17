@@ -1,4 +1,4 @@
-# JPEG Robustness of AI-generated Image Detectors
+# Evaluating the Robustness of AI-Generated Image Detectors Under JPEG Compression with XAI
 
 Machine Learning and Programming — Yonsei University, Spring 2026  
 Rachel Lu · Bi Yueqi
