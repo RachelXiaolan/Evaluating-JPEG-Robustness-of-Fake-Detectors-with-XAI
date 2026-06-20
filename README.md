@@ -1,7 +1,7 @@
 # Evaluating the Robustness of AI-Generated Image Detectors Under JPEG Compression with XAI
 
-> **Team 5**  
-> LU CHUNLAN (2024321094), BI YUEQI (2025323038)  
+> **Team 5**
+> LU CHUNLAN (2024321094), BI YUEQI (2025323038)
 > Machine Learning and Programming — Yonsei University, Spring 2026
 
 ## Overview
@@ -32,18 +32,20 @@ We are not studying the robustness of JPEG compression itself. We study whether 
 <!-- TODO: Replace the placeholder below with your flow diagram -->
 <!-- Suggested format: PNG or SVG, showing Stage 1 (ResNet18 pipeline) and Stage 2 (cross-architecture comparison) -->
 
-> **[Flow Diagram Placeholder]**  
+> **[Flow Diagram Placeholder]**
 > A two-stage flow diagram will be inserted here:
 > - Stage 1: ResNet18 baseline → Grad-CAM diagnosis → Background Suppression
 > - Stage 2: 3-architecture baseline comparison → Intervention transfer tests
 
 ### Stage 1: ResNet18 XAI-guided Pipeline
+
 - Train ResNet18 baseline and observe JPEG-induced fake recall drop
-- Use Grad-CAM to diagnose failure cases (heatmap correlation = 0.97)
+- Use Grad-CAM to compare whether the attended regions remain similar before and after JPEG compression
 - Apply Background Suppression using DeepLabV3 pseudo masks
-- Result: JPEG fake recall improved from 81.33% to 86.67%
+- In the initial ResNet18 setting, JPEG fake recall improved from 81.33% to 86.67%. This early result motivated the later intervention transfer tests on ViT. It is not directly comparable to the expanded baseline table below, which uses a larger dataset and different training configuration.
 
 ### Stage 2: Cross-architecture Comparison & Intervention Transfer
+
 - Expand to ViT-B/16 and DINOv3-ViT-B/16 on the full dataset (~20K images)
 - Paired prediction analysis to quantify fake-to-real shifts
 - Test whether BG Suppression and LazyStrike-k1 transfer to ViT
@@ -100,6 +102,10 @@ Selected TP→FN visualization panels are in `results/xai_cases/`. Each panel sh
 | DINOv3 | 4851 | Male face — skin and hair details compressed |
 | DINOv3 | 1806 | Face in flames — high-frequency lighting and texture cues affected |
 
+## Limitations
+
+This study has several limitations. First, the main robustness test uses one compression level, JPEG q30, so future work should evaluate multiple compression strengths. Second, our initial intervention design was partly motivated by background-bias hypotheses, but later XAI observations suggest that JPEG-induced fake misses are not limited to background cues. The lost evidence may include textures, reflections, edges, lighting, skin/hair details, and other compression-sensitive cues. Third, our LazyStrike-k1 implementation is a simplified LazyStrike-inspired intervention rather than a full reproduction of the original method. Therefore, the negative intervention results should be interpreted as evidence of task and architecture mismatch, not as a complete evaluation of LazyStrike itself.
+
 ## Future Work: More Realistic AI Images and Robustness Benchmarks
 
 As AI-generated images become more realistic, fake-image detectors may no longer rely on obvious artifacts. Instead, they may depend on more subtle cues, such as texture, lighting, reflections, edges, skin details, or compression-sensitive patterns. These cues can be easily weakened by common real-world post-processing operations, including JPEG compression, resizing, filtering, and platform recompression.
@@ -116,7 +122,7 @@ A more complete benchmark should include newer and more realistic AI-generated i
 
 **Q: Why did you focus on fake recall instead of overall accuracy?**
 
-> A: In safety-sensitive scenarios, missing a fake image (false negative) is more dangerous than a false alarm (false positive). Overall accuracy can remain high even when many fake images are missed, because real images dominate the dataset. Fake recall and TP→FN transitions directly capture the failure mode we care about.
+> A: Overall accuracy can hide the type of error being made. In this task, missing fake images is more safety-critical than false alarms, so fake recall and TP→FN transitions are more directly related to the risk we care about.
 
 **Q: How is your paired evaluation different from standard evaluation?**
 
