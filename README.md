@@ -1,20 +1,30 @@
 # Evaluating the Robustness of AI-Generated Image Detectors Under JPEG Compression with XAI
 
 Machine Learning and Programming — Yonsei University, Spring 2026  
-Rachel Lu · Bi Yueqi
+LU CHUNLAN · BI YUEQI
 
 ## Overview
 
 This project investigates how JPEG compression affects the performance of AI-generated image (fake image) detectors, and whether XAI-guided analysis can diagnose the failure mechanism and inform robustness interventions.
 
+### What "Robustness" Means in This Project
+
+In this project, robustness refers to the stability of fake-image detectors under JPEG compression. Specifically, we evaluate three things:
+
+- **Fake recall stability** — does JPEG compression cause the detector to miss more fake images?
+- **TP→FN stability** — how many images shift from correct fake detection to incorrect real classification?
+- **Detector confidence stability** — does the model's fake probability drop after compression?
+
+We are not studying the robustness of JPEG compression itself. We study whether detectors can still correctly identify fake images after a common real-world transformation.
+
 ## Research Questions
 
 | # | Question |
 |---|----------|
-| RQ1 | Does JPEG compression cause fake recall drop across architectures? |
-| RQ2 | How do fake-to-real prediction shifts occur at the per-image level? |
-| RQ3 | Does XAI support a fragile cue reliance hypothesis? |
-| RQ4 | Can background suppression or LazyStrike-inspired intervention improve JPEG robustness? |
+| RQ1 | Does JPEG compression reduce fake-image recall across different detector architectures? |
+| RQ2 | How do fake-to-real prediction shifts happen at the paired-image level? |
+| RQ3 | Can XAI reveal what visual evidence is weakened after JPEG compression? |
+| RQ4 | Do background suppression and LazyStrike-inspired interventions improve robustness, or do they reveal architecture-specific limitations? |
 
 ## Method
 
@@ -48,10 +58,21 @@ This project investigates how JPEG compression affects the performance of AI-gen
 | + LazyStrike-k1 | 95.63% | 93.57% | 2.07% | 136 |
 
 ### Key Findings
-1. JPEG compression causes fake recall drop across all architectures
-2. DINOv3 achieves the strongest clean performance but is the most fragile under compression
-3. Background suppression works on ResNet18 but does not directly transfer to ViT
-4. Robustness intervention must be architecture-aware
+
+1. **JPEG compression reduces fake-image recall across all tested architectures.**
+   ResNet18, ViT-B/16, and DINOv3-ViT-B/16 all show fake recall drops after JPEG q30 compression.
+
+2. **Clean-image performance does not guarantee JPEG robustness.**
+   DINOv3-ViT-B/16 achieves the strongest original fake recall, but it also shows the largest recall drop and the most fake TP→FN cases after compression.
+
+3. **JPEG-induced failures are not limited to background bias.**
+   XAI cases suggest that the lost evidence may include fine-grained textures, reflections, edges, lighting patterns, skin/hair details, and background cues. Background bias may be one part of the problem, but it does not explain all cases.
+
+4. **Intervention effects are architecture-sensitive.**
+   Background suppression improved the initial ResNet18 setting, but it did not transfer to ViT-B/16. The simplified LazyStrike-k1 intervention also changed model behavior but did not improve JPEG robustness.
+
+5. **Future robustness methods should be both task-aware and architecture-aware.**
+   Fake-image detection may require different robustness strategies for CNNs, supervised ViTs, and self-supervised DINO features.
 
 ## XAI Cases
 
@@ -59,13 +80,21 @@ Selected TP→FN visualization panels are in `results/xai_cases/`. Each panel sh
 
 | Model | Case ID | Description |
 |-------|---------|-------------|
-| ResNet18 | 0882 | Bear — high-frequency fur texture destroyed |
-| ResNet18 | 2354 | Desert house — structural edge degradation |
-| ViT-B/16 | 2839 | Lake scene — patch-level texture dependency |
-| ViT-B/16 | 0279 | Crowd — complex background reliance |
-| DINOv3 | 0708 | Sports car — background bokeh/lighting (prob_fake: 0.998→0.005) |
-| DINOv3 | 4851 | Male face — skin/hair detail compression |
-| DINOv3 | 1806 | Face in flames — high-frequency + lighting artifacts |
+| ResNet18 | 0882 | Bear — high-frequency fur texture weakened after JPEG |
+| ResNet18 | 2354 | Desert house — structural edges and textures degraded |
+| ViT-B/16 | 2839 | Lake scene — patch-level texture and reflection cues weakened |
+| ViT-B/16 | 0279 | Crowd — complex scene and background cues affected |
+| DINOv3 | 0708 | Sports car — reflection, lighting, and background bokeh cues weakened (prob_fake: 0.998→0.005) |
+| DINOv3 | 4851 | Male face — skin and hair details compressed |
+| DINOv3 | 1806 | Face in flames — high-frequency lighting and texture cues affected |
+
+## Future Work: More Realistic AI Images and Robustness Benchmarks
+
+As AI-generated images become more realistic, fake-image detectors may no longer rely on obvious artifacts. Instead, they may depend on more subtle cues, such as texture, lighting, reflections, edges, skin details, or compression-sensitive patterns. These cues can be easily weakened by common real-world post-processing operations, including JPEG compression, resizing, filtering, and platform recompression.
+
+Therefore, future detector training should include more realistic image transformations, such as multiple JPEG quality levels, resizing, blur, noise, and social-media-style recompression. Future benchmarks should also evaluate not only clean-image accuracy, but also fake recall stability, TP→FN transitions, and confidence changes under different post-processing conditions.
+
+A more complete benchmark should include newer and more realistic AI-generated images, multiple generator sources, multiple compression levels, and paired original/post-processed evaluation. This would better reflect real-world deployment, where fake images are rarely distributed in a clean, uncompressed form.
 
 ## Repository Structure
 
